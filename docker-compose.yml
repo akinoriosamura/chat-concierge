@@ -1,0 +1,36 @@
+version: '3.7'
+services:
+  # db server
+  chat-mysql:
+    image: mysql:5.7
+    container_name: chat-mysql
+    environment:
+      MYSQL_USER: osamura
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+      TZ: 'Asis/Tokyo'
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci --wait_timeout=28800
+    volumes:
+      - ./mysql/data:/var/lib/mysql/data
+    ports:
+      - 3306:3306
+
+  # API esrver
+  chat-api:
+    container_name: chat-api
+    stdin_open: true
+    tty: true
+    command: /bin/bash
+    build:
+      context: .
+      dockerfile: ./app/Dockerfile
+    # command: pipenv run tests
+    volumes:
+      - ./:/app
+    ports:
+      - 1000:8080
+    depends_on:
+      - 'chat-mysql'
+    env_file:
+      - ./.env
+    environment:
+      - ENV GoogleMapAPIKEY

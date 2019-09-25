@@ -1,0 +1,25 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+pytest-cov = "*"
+autopep8 = "*"
+flake8 = "*"
+mypy = "*"
+pytest-flake8 = "*"
+pep8 = "*"
+flake8-import-order = "*"
+
+[packages]
+numpy = "*"
+googlemaps = "*"
+pandas = "*"
+
+[requires]
+python_version = "3.7"
+
+[scripts]
+test = "pytest -v --flake8 --cov=."
