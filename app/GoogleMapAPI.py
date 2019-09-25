@@ -1,6 +1,8 @@
-import googlemaps
-import numpy as np
 import os
+
+import numpy as np
+
+import googlemaps
 
 
 class GoogleNearbyAPI():

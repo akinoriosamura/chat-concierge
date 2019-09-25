@@ -42,6 +42,9 @@ def test_extract_responses(google_nearby_api):
         results [list]: extraceted results
 
     """
-    results = google_nearby_api.extract_responses(35.6, 139.7, 300)
+    lat = 35.6
+    lng = 139.7
+    radius = 300
+    results = google_nearby_api.extract_responses(lat, lng, radius)
     assert results != []
     assert set(google_nearby_api.extracted_attrs) == set(results[0].keys())
