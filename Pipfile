@@ -17,6 +17,8 @@ flake8-import-order = "*"
 numpy = "*"
 googlemaps = "*"
 pandas = "*"
+flask = "*"
+line-bot-sdk = "*"
 
 [requires]
 python_version = "3.7"
