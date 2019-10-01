@@ -9,8 +9,10 @@ class Nlg(object):
         restaurant_info = self.restaurant_selector.select()
         text = ""
         restaurant_name = restaurant_info["name"]
-        price_level = str(restaurant_info["price_level"])
+        # price_level = str(restaurant_info["price_level"])
+        rating = str(restaurant_info["rating"])
         text += "近場で良さそな店は" + restaurant_name + "だね！"
-        text += "値段帯でいうと" + price_level + "ぐらい！"
+        text += "GoogleMapの評価は" + rating + "だよ！"
+        # text += "値段帯でいうと" + price_level + "ぐらい！"
 
         return text

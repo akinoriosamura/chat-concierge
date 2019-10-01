@@ -16,5 +16,5 @@ def test_select(restaurant_selector):
 
     """
     selected_result = restaurant_selector.select()
-    assert type(selected_result) == dict
+    assert isinstance(selected_result, dict)
     assert selected_result != {}
