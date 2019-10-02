@@ -10,5 +10,3 @@ WORKDIR /app
 RUN pip install -U pip && \
     pip install pipenv && \
     pipenv install --dev --system
-
-RUN flask db init

@@ -2,7 +2,6 @@ version: '3.7'
 services:
   # db server
   chat-mysql:
-    image: mysql:5.7
     container_name: chat-mysql
     build: ./mysql/
     volumes:
@@ -26,9 +25,11 @@ services:
       - ENV YOUR_CHANNEL_SECRET
     stdin_open: true
     tty: true
-    build: ./chat
-    command: /bin/bash
     ports:
       - 4000:4000
-    depends_on:
-      - chat-mysql
+    build: ./chat
+    # command: /bin/bash
+    command: flask db init
+    command: flask db migrate
+    command: flask db upgrade
+    command: flask run -h 0.0.0.0 -p 4000
