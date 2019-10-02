@@ -1,0 +1,1 @@
+docker exec -it chat-api /bin/bash

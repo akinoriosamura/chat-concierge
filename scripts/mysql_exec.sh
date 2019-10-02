@@ -1,0 +1,1 @@
+docker-compose exec chat-mysql mysql -u root -p

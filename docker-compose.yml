@@ -28,8 +28,4 @@ services:
     ports:
       - 4000:4000
     build: ./chat
-    # command: /bin/bash
-    command: flask db init
-    command: flask db migrate
-    command: flask db upgrade
     command: flask run -h 0.0.0.0 -p 4000

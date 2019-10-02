@@ -2,7 +2,8 @@ import os
 
 from chat import dialogue_manager
 import chat.models
-from chat.database import init_db
+from chat.database import init_db, db
+from chat.models.user import User
 
 from flask import Flask, abort, request
 
@@ -45,10 +46,6 @@ def callback():
     # get X-Line-Signature header value
     signature = request.headers['X-Line-Signature']
 
-    # get result  text
-    # recommend_text = manager.get_recommend()
-    # app.logger.info("manager result: " + recommend_text)
-
     # get request body as text
     body = request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
@@ -64,6 +61,22 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    """
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=event.message.text))
+    """
+    print(event)
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text="sample"))
+
+
+@app.route("/")
+def test():
+    app.logger.info("test OK")
+    user = User("test")
+    db.session.add(user)
+    db.session.commit()
+
+    return 'OK'
