@@ -1,4 +1,10 @@
-from flask import Flask, request, abort
+import os
+
+from chat import dialogue_manager
+import chat.models
+from chat.database import init_db
+
+from flask import Flask, abort, request
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -9,9 +15,18 @@ from linebot.exceptions import (
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
-import os
 
-app = Flask(__name__)
+
+#  initialize app db migrate
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object('chat.config.Config')
+    init_db(app)
+
+    return app
+
+
+app = create_app()
 
 # LINE Access Token
 YOUR_CHANNEL_ACCESS_TOKEN = os.environ["YOUR_CHANNEL_ACCESS_TOKEN"]
@@ -21,11 +36,18 @@ YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 
+# initialize
+manager = dialogue_manager.DialogueManager()
+
 
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
     signature = request.headers['X-Line-Signature']
+
+    # get result  text
+    # recommend_text = manager.get_recommend()
+    # app.logger.info("manager result: " + recommend_text)
 
     # get request body as text
     body = request.get_data(as_text=True)
@@ -45,7 +67,3 @@ def handle_message(event):
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=event.message.text))
-
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=1000)

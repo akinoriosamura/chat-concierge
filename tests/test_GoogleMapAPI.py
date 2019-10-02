@@ -1,6 +1,6 @@
-import pytest
+from chat import GoogleMapAPI
 
-from app import GoogleMapAPI
+import pytest
 
 
 @pytest.fixture

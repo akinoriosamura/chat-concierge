@@ -1,6 +1,6 @@
-import pytest
+from chat import selector
 
-from app import selector
+import pytest
 
 
 @pytest.fixture

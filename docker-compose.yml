@@ -4,33 +4,31 @@ services:
   chat-mysql:
     image: mysql:5.7
     container_name: chat-mysql
-    environment:
-      MYSQL_USER: osamura
-      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
-      TZ: 'Asis/Tokyo'
-    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci --wait_timeout=28800
+    build: ./mysql/
     volumes:
-      - ./mysql/data:/var/lib/mysql/data
-    ports:
-      - 3306:3306
+      - ./mysql/data:/var/lib/mysql # データの永続化
+      - ./mysql/sqls:/docker-entrypoint-initdb.d # 初期化時に実行するSQL
+    environment:
+      - MYSQL_ROOT_PASSWORD=osamura # パスワードはお好みで
+      - TZ=Asis/Tokyo
 
   # API esrver
   chat-api:
     container_name: chat-api
-    stdin_open: true
-    tty: true
-    command: /bin/bash
-    build:
-      context: .
-      dockerfile: ./app/Dockerfile
-    # command: pipenv run tests
     volumes:
       - ./:/app
-    ports:
-      - 1000:8080
-    depends_on:
-      - 'chat-mysql'
     env_file:
       - ./.env
     environment:
+      - FLASK_APP=/app/chat/run.py 
       - ENV GoogleMapAPIKEY
+      - ENV YOUR_CHANNEL_ACCESS_TOKEN
+      - ENV YOUR_CHANNEL_SECRET
+    stdin_open: true
+    tty: true
+    build: ./chat
+    command: /bin/bash
+    ports:
+      - 4000:4000
+    depends_on:
+      - chat-mysql

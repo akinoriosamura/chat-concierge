@@ -1,4 +1,4 @@
-from app import selector
+from chat import selector
 
 
 class Nlg(object):
