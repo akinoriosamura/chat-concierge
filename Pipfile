@@ -4,8 +4,33 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pytest = "*"
+pytest-cov = "*"
+autopep8 = "*"
+flake8 = "*"
+mypy = "*"
+pytest-flake8 = "*"
+pep8 = "*"
+flake8-import-order = "*"
+flask-testing = "*"
 
 [packages]
+numpy = "*"
+googlemaps = "*"
+pandas = "*"
+flask = "*"
+line-bot-sdk = "*"
+sqlalchemy = "*"
+flask-sqlalchemy = "*"
+pymysql = "*"
+flask-migrate = "*"
+cryptography = "*"
+sqlalchemy-utils = "*"
 
 [requires]
 python_version = "3.7"
+
+[scripts]
+test = "pytest -v --flake8 --cov=."
+api_test = "pytest -v --flake8 --cov=. ./tests/test_app.py"
+run_server = "flask run --port=4000"

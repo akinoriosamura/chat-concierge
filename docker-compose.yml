@@ -19,13 +19,15 @@ services:
     env_file:
       - ./.env
     environment:
-      - FLASK_APP=/app/chat/run.py 
-      - ENV GoogleMapAPIKEY
-      - ENV YOUR_CHANNEL_ACCESS_TOKEN
-      - ENV YOUR_CHANNEL_SECRET
+      FLASK_APP: /app/chat/run.py 
+      ENV: GoogleMapAPIKEY
+      ENV: YOUR_CHANNEL_ACCESS_TOKEN
+      ENV: YOUR_CHANNEL_SECRET
     stdin_open: true
     tty: true
     ports:
       - 4000:4000
-    build: ./chat
+    build:
+      context: ./
+      dockerfile: ./chat/Dockerfile
     command: flask run -h 0.0.0.0 -p 4000

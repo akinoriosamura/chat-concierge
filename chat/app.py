@@ -1,11 +1,12 @@
 import os
+import datetime
 
 from chat import dialogue_manager
 import chat.models
-from chat.database import init_db, db
 from chat.models.user import User
+from chat.database import init_db, db
 
-from flask import Flask, abort, request
+from flask import Flask, abort, request, jsonify, render_template
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -19,9 +20,14 @@ from linebot.models import (
 
 
 #  initialize app db migrate
-def create_app():
-    app = Flask(__name__)
-    app.config.from_object('chat.config.Config')
+def create_app(test=False):
+    app = Flask(
+        __name__, static_folder="../build/static", template_folder="../build"
+    )
+    if test:
+        app.config.from_object('chat.config.TestingConfig')
+    else:
+        app.config.from_object('chat.config.Config')
     init_db(app)
 
     return app
@@ -56,7 +62,7 @@ def callback():
     except InvalidSignatureError:
         abort(400)
 
-    return 'OK'
+    return 'callback OK'
 
 
 @handler.add(MessageEvent, message=TextMessage)
@@ -67,16 +73,179 @@ def handle_message(event):
         TextSendMessage(text=event.message.text))
     """
     print(event)
+    text = manager.get_inquiry()
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text="sample"))
+        TextSendMessage(text=text))
 
 
 @app.route("/")
-def test():
-    app.logger.info("test OK")
-    user = User("test")
-    db.session.add(user)
-    db.session.commit()
+def settings():
+    return render_template("index.html")
 
-    return 'OK'
+
+@app.route("/inquiry")
+def inquiry():
+    return render_template("index.html")
+
+
+# add user
+@app.route('/users', methods=['POST'])
+def ceate_user():
+    posted = request.get_json()
+    if 'name' in posted:
+        name = posted['name']
+        user = User(name)
+        db.session.add(user)
+        db.session.commit()
+        msg = 'User {} created'.format(user.name)
+    else:
+        msg = 'No user created'
+    json = {
+        'message': msg
+    }
+    return jsonify(json)
+
+# place
+@app.route('/users/<int:userid>/places', methods=['GET'])
+def get_place(userid):
+    userid = str(userid)
+    user = db.session.query(User).filter_by(id=userid).first()
+    json = {
+        'place': user.place
+    }
+    return jsonify(json)
+
+
+@app.route('/users/<int:userid>/places', methods=['PUT'])
+def update_place(userid):
+    userid = str(userid)
+    user = db.session.query(User).filter_by(id=userid).first()
+    posted = request.get_json()
+    if 'place' in posted:
+        user.place = posted['place']
+        db.session.add(user)
+        db.session.commit()
+        msg = 'User {} {} updated'.format(user.name, user.place)
+    else:
+        msg = 'No user updated'
+    json = {
+        'message': msg
+    }
+    return jsonify(json)
+
+# visit time
+@app.route('/users/<int:userid>/visit_times', methods=['GET'])
+def get_visit_time(userid):
+    userid = str(userid)
+    user = db.session.query(User).filter_by(id=userid).first()
+    user_visit_time = user.visit_time
+    str_visit_time = user_visit_time.strftime('%H:%M')
+    json = {
+        'visit_time': str_visit_time
+    }
+    return jsonify(json)
+
+
+@app.route('/users/<int:userid>/visit_times', methods=['PUT'])
+def update_visit_time(userid):
+    userid = str(userid)
+    user = db.session.query(User).filter_by(id=userid).first()
+    posted = request.get_json()
+    if 'visit_time' in posted:
+        str_visit_time = posted['visit_time']
+        dt_visi_time = datetime.datetime.strptime(str_visit_time, '%H:%M')
+        user.visit_time = dt_visi_time
+        db.session.add(user)
+        db.session.commit()
+        msg = 'User {} {} updated'.format(user.name, str_visit_time)
+    else:
+        msg = 'No user updated'
+    json = {
+        'message': msg
+    }
+    return jsonify(json)
+
+# budget
+@app.route('/users/<int:userid>/budgets', methods=['GET'])
+def get_budget(userid):
+    userid = str(userid)
+    user = db.session.query(User).filter_by(id=userid).first()
+    json = {
+        'budget': str(user.budget)
+    }
+    return jsonify(json)
+
+
+@app.route('/users/<int:userid>/budgets', methods=['PUT'])
+def update_budget(userid):
+    userid = str(userid)
+    user = db.session.query(User).filter_by(id=userid).first()
+    posted = request.get_json()
+    if 'budget' in posted:
+        user.budget = int(posted['budget'])
+        db.session.add(user)
+        db.session.commit()
+        msg = 'User {} {} updated'.format(user.name, user.budget)
+    else:
+        msg = 'No user updated'
+    json = {
+        'message': msg
+    }
+    return jsonify(json)
+
+# mail
+@app.route('/users/<int:userid>/mails', methods=['GET'])
+def get_mail(userid):
+    userid = str(userid)
+    user = db.session.query(User).filter_by(id=userid).first()
+    json = {
+        'mail': user.mail
+    }
+    return jsonify(json)
+
+
+@app.route('/users/<int:userid>/mails', methods=['PUT'])
+def update_mail(userid):
+    userid = str(userid)
+    user = db.session.query(User).filter_by(id=userid).first()
+    posted = request.get_json()
+    if 'mail' in posted:
+        user.mail = posted['mail']
+        db.session.add(user)
+        db.session.commit()
+        msg = 'User {} {} updated'.format(user.name, user.mail)
+    else:
+        msg = 'No user updated'
+    json = {
+        'message': msg
+    }
+    return jsonify(json)
+
+# inquiry
+@app.route('/users/<int:userid>/inquirys', methods=['GET'])
+def get_inquiry(userid):
+    userid = str(userid)
+    user = db.session.query(User).filter_by(id=userid).first()
+    json = {
+        'inquiry': user.inquiry
+    }
+    return jsonify(json)
+
+
+@app.route('/users/<int:userid>/inquirys', methods=['PUT'])
+def update_inquiry(userid):
+    userid = str(userid)
+    user = db.session.query(User).filter_by(id=userid).first()
+    posted = request.get_json()
+    if 'inquiry' in posted:
+        user.inquiry = posted['inquiry']
+        db.session.add(user)
+        db.session.commit()
+        msg = 'User {} {} updated'.format(user.name, user.inquiry)
+    else:
+        msg = 'No user updated'
+    json = {
+        'message': msg
+    }
+    return jsonify(json)
