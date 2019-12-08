@@ -30,8 +30,10 @@ Ctrl + c
  - install ngrok
  - run ngrok
  ```
- ngrok htttps 4000
+ ngrok htttp 4000
  ```
+ - change ngork link in line developer  
+ https://developers.line.biz/console/channel/1626501382/liff/1626501382-xMvalEMJ  
 
 ### in line
  - open AI コンシェルジュ
