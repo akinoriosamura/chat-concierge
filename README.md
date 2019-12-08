@@ -1,18 +1,22 @@
 # chat-concierge
 
-## api
+## api ref
 (line developer)[https://developers.line.biz/console/channel/1626501382/basic/]  
  - callback & LIFF  
 (line official account manager)[https://manager.line.biz/]  
  - rich menu  
 
-## build
+## run
+### build
 ```
 docker-compose up -d
  - flask run も走る
 ```
 
-## db create if not
+### check link
+ - please check url and api key
+
+### db create if not
 ```
 docker exec -it chat-api /bin/bash
 cd chat
@@ -21,6 +25,17 @@ flask db migrate
 flask db upgrade
 Ctrl + c
 ```
+
+### ngrok
+ - install ngrok
+ - run ngrok
+ ```
+ ngrok htttps 4000
+ ```
+
+### in line
+ - open AI コンシェルジュ
+ - tap rich menu
 
 ## api shell
 ```
