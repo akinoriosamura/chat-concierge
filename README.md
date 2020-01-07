@@ -1,10 +1,15 @@
 # chat-concierge
 
 ## api ref
-(line developer)[https://developers.line.biz/console/channel/1626501382/basic/]  
  - callback & LIFF  
 (line official account manager)[https://manager.line.biz/]  
+ - LIFF app link
+ https://developers.line.biz/console/channel/1626501382
  - rich menu  
+(line developer)[https://developers.line.biz/console/channel/1626501382/basic/]  
+ - inquiry
+https://docs.google.com/forms/d/1mQqv4M-cW4jXUc0JOQvZ-2saVRPczxSD57-CR4NyN-4/edit
+
 
 ## run
 ### build
@@ -30,7 +35,7 @@ Ctrl + c
  - install ngrok
  - run ngrok
  ```
- ngrok htttp 4000
+ ngrok htttp 3031
  ```
  - change ngork link in line developer  
  https://developers.line.biz/console/channel/1626501382/liff/1626501382-xMvalEMJ  
