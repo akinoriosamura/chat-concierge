@@ -61,3 +61,11 @@ cd chat
 pipenv run test
 Ctrl + c
 ```
+## until release production server
+ - flask, gunicorn(wsgi), nginx(web server), docker
+https://testdriven.io/courses/tdd-flask/deployment/
+https://qiita.com/arata-honda/items/e22c9df83df8ee0e9c4c
+http://docs.docker.jp/compose/production.html
+https://www.slideshare.net/zaruhiroyukisakuraba/railsdocker-78973487
+https://github.com/CircleCI-Public/circleci-demo-docker/blob/master/.circleci/config.yml
+
