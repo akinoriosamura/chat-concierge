@@ -19,8 +19,12 @@ class GoogleNearbyAPI():
         self.params = {
             'location': (None, None),
             'radius': None,
+            'min_price': 0,
+            'max_price': 4,
+            'keyword': None,
             'type': 'restaurant',
-            'language': 'ja'
+            'language': 'ja',
+            'rank_by': 'prominence', # Googleの裏のアルゴリズムによるランキング順
         }
         # 'opening_hours': {'open_now': True}
         self.extracted_attrs = [
@@ -40,7 +44,6 @@ class GoogleNearbyAPI():
         """
         place_result = self.client.places_nearby(**self.params)
         responses = place_result['results']
-        # import pdb;pdb.set_trace()
         if 'next_page_token' in place_result.keys():
             page_token = place_result["next_page_token"]
         else:
@@ -48,17 +51,23 @@ class GoogleNearbyAPI():
 
         return responses, page_token
 
-    def extract_responses(self, lat, lng, radius):
+    def extract_responses(self, lat, lng, radius, minprice, maxprice, keyword):
         """responseから必要な要素を集計
         Args:
             lat [int]: 緯度
             lng [int]: 経度
             radius [int]: 探索半径
+            minprice: [int]: 最小値段範囲/default 1
+            maxprice: [int]: 最大値段範囲
+            keyword [string]: クエリー
         Returns:
             results [list]: extraceted results
         """
         self.params["location"] = (lat, lng)
         self.params["radius"] = radius
+        self.params["min_price"] = minprice
+        self.params["max_price"] = maxprice
+        self.params["keyword"] = keyword
         results = []
         # api response MAX iter is 3
         api_max_iter = 3
@@ -139,7 +148,6 @@ class GoogleNearbyAPI():
                 else:
                     dict_result["vicinity"] = ""
 
-                # import pdb;pdb.set_trace()
                 results.append(dict_result)
 
             # 次のページがない場合break
@@ -147,3 +155,27 @@ class GoogleNearbyAPI():
                 break
 
         return results
+
+
+class GoogleDetailAPI():
+    """
+    use google place nearby api
+    """
+    def __init__(self):
+        self.key = os.environ["GoogleMapAPIKEY"]  # 上記で作成したAPIキーを入れる
+        self.client = googlemaps.Client(self.key)  # インスタンス生成
+        self.params = {
+            'place_id': None
+        }
+
+    def extract_responses(self, place_id):
+        """responseから必要な要素を集計
+        Args:
+            place_id [string]: 場所のid
+        Returns:
+            detail_result [dict]: extraceted result etail
+        """
+        self.params["place_id"] = place_id
+        detail_result = self.client.place(**self.params)
+
+        return detail_result

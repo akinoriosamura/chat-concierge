@@ -4,21 +4,37 @@ from chat import GoogleMapAPI
 
 
 class RestaurantSelector(object):
-    def __init__(self):
+    def __init__(self, lat, lng, time, maxprice, keyword):
         self.googlenearbyapi = GoogleMapAPI.GoogleNearbyAPI()
+        # filter conditions
+        # place (35.62, 139.73) in oosaki
+        self.lat = lat
+        self.lng = lng
+        self.radius = 500
+        # time
+        self.time = time
+        # price
+        self.minprice = 0
+        self.maxprice = maxprice
+        self.keyword = keyword
 
-    def get_restaurants_by_api(self, lat, lng, radius):
+
+    def get_restaurants_by_api(self):
         """GoogleMapAPIからレストラン一覧を取得
 
         Args:
-            lat ([float]): 検索緯度
-            lng ([float]): 検索経度
-            radius ([float]): 検索半径
 
         Returns:
             restaurants ([list]): apiにより取得したレストラン一覧
         """
-        restaurants = self.googlenearbyapi.extract_responses(lat, lng, radius)
+        restaurants = self.googlenearbyapi.extract_responses(
+            self.lat,
+            self.lng,
+            self.radius,
+            self.minprice,
+            self.maxprice,
+            self.keyword
+            )
 
         return restaurants
 
@@ -27,13 +43,19 @@ class RestaurantSelector(object):
 
         Returns:
             selected_result [dict]: one selected restaurant
+             - this is ordered by prominance by googlemapapi
 
         """
-        lat = 35.6
-        lng = 139.7
-        radius = 300
-        restaurants = self.get_restaurants_by_api(lat, lng, radius)
-        # select logic
-        selected_result = random.choice(restaurants)
+        restaurants = self.get_restaurants_by_api()
+        # select restaurants
+        # time filter
+        if self.time == "now":
+            # filter by opennow
+            restaurants = [restaurant for restaurant in restaurants if restaurant["open_now"] == True]
+            print("num of restaurants: ", len(restaurants))
+            # top of order for googlemapapi pronunce order
+            selected_result = restaurants[0]
+        else:
+            selected_result = random.choice(restaurants)
 
         return selected_result
