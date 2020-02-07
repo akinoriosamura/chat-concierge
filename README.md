@@ -35,10 +35,17 @@ Ctrl + c
  - install ngrok
  - run ngrok
  ```
- ngrok htttp 3031
+ ngrok htttp 4000
  ```
- - change ngork link in line developer  
+
+### connect to line api
+ - change link in line dev for LIFF  
  https://developers.line.biz/console/channel/1626501382/liff/1626501382-xMvalEMJ  
+ - change link in line dev for message API  
+ https://developers.line.biz/console/channel/1626501382/messaging-api
+ - run rich menu  
+ https://manager.line.biz/account/@968puzvz/richmenu/2092848
+
 
 ### in line
  - open AI コンシェルジュ
