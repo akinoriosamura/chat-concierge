@@ -15,7 +15,7 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage,
+    MessageEvent, TextMessage, TextSendMessage, LocationMessage
 )
 
 
@@ -44,7 +44,7 @@ line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 
 # initialize
-manager = dialogue_manager.DialogueManager()
+manager = dialogue_manager.DialogueManager(30, 150)
 
 
 @app.route("/callback", methods=['POST'])
@@ -73,11 +73,40 @@ def handle_message(event):
         TextSendMessage(text=event.message.text))
     """
     print(event)
-    text = manager.get_inquiry()
+    if event.type == "message":
+        if (event.message.text == "おすすめ"):
+            line_bot_api.reply_message(
+                event.reply_token,
+                [
+                    TextSendMessage(text='近くのおすすめの店舗を紹介するから位置情報を送ってねん！'+ chr(0x10008D)),
+                    TextSendMessage(text='line://nv/location'),
+                ]
+            )
+        else:
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text="おすすめを知りたかったら、おすすめボタンを押してね！"))
+    else:
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text="おすすめを知りたかったら、おすすめボタンを押してね！"))
+
+@handler.add(MessageEvent, message=LocationMessage)
+def handle_location(event):
+    lat = event.message.latitude
+    lon = event.message.longitude
+    print("位置情報", event.message)
+
+    # レコメンド内容取得
+
+    # lineにメッセージ送信
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=text))
-
+        [
+            TextSendMessage(text='おすすめ店舗は＊＊です。'),
+            TextSendMessage(text='またいつでも聞いてください！'),
+        ]
+    )
 
 @app.route("/")
 def settings():
@@ -127,6 +156,34 @@ def update_place(userid):
         db.session.add(user)
         db.session.commit()
         msg = 'User {} {} updated'.format(user.name, user.place)
+    else:
+        msg = 'No user updated'
+    json = {
+        'message': msg
+    }
+    return jsonify(json)
+
+# prefer
+@app.route('/users/<int:userid>/prefers', methods=['GET'])
+def get_prefer(userid):
+    userid = str(userid)
+    user = db.session.query(User).filter_by(id=userid).first()
+    json = {
+        'prefer': user.prefer
+    }
+    return jsonify(json)
+
+
+@app.route('/users/<int:userid>/prefers', methods=['PUT'])
+def update_prefer(userid):
+    userid = str(userid)
+    user = db.session.query(User).filter_by(id=userid).first()
+    posted = request.get_json()
+    if 'prefer' in posted:
+        user.place = posted['prefer']
+        db.session.add(user)
+        db.session.commit()
+        msg = 'User {} {} updated'.format(user.name, user.prefer)
     else:
         msg = 'No user updated'
     json = {

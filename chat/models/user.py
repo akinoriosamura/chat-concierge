@@ -13,6 +13,7 @@ class User(db.Model):
     budget = db.Column(db.Integer, nullable=False, default=1000)
     # here or station name
     place = db.Column(db.String(255), nullable=False, default="here")
+    prefer = db.Column(db.String(255), nullable=False, default="")
     mail = db.Column(db.String(255), nullable=False, default="")
     inquiry = db.Column(db.String(255), nullable=False, default="")
 

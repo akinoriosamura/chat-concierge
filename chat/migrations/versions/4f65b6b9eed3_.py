@@ -25,6 +25,7 @@ def upgrade():
     sa.Column('visit_time', sa.DateTime(), nullable=False),
     sa.Column('budget', sa.Integer(), nullable=False),
     sa.Column('place', sa.String(length=255), nullable=False),
+    sa.Column('prefer', sa.String(length=255), nullable=False),
     sa.Column('mail', sa.String(length=255), nullable=False),
     sa.Column('inquiry', sa.String(length=255), nullable=False),
     sa.Column('createTime', sa.DateTime(), nullable=False),
