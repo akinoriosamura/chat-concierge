@@ -8,7 +8,11 @@ services:
       - ./mysql/data:/var/lib/mysql # データの永続化
       - ./mysql/sqls:/docker-entrypoint-initdb.d # 初期化時に実行するSQL
     environment:
-      - MYSQL_ROOT_PASSWORD=osamura # パスワードはお好みで
+      - MYSQL_ROOT_PASSWORD=Mitsuya90
+      - DB_PASSWORD=Mitsuya90
+      - DB_DATABASE=chat
+      - DB_TEST_PASSWORD=Mitsuya90
+      - DB_TEST_DATABASE=test_chat
       - TZ=Asis/Tokyo
 
   # API esrver

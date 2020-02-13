@@ -15,7 +15,7 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage, LocationMessage
+    FollowEvent, MessageEvent, TextMessage, TextSendMessage, LocationMessage
 )
 
 
@@ -64,6 +64,28 @@ def callback():
 
     return 'callback OK'
 
+# フォローイベントの場合の処理
+@handler.add(FollowEvent)
+def handle_follow(event):
+    print("event: ", event)
+    UID = event.source.user_id
+    print("UID: ", UID)
+    # event = {"replyToken": "fe0ad3806cf84871ad4e365a31f8165f",
+    # "source": {"type": "user", "userId": "U9dd63684d2d1be8262ae4ada81e84d13"}, "timestamp": 1581601008508, "type": "follow"}
+    # create new user
+    name = UID
+    user = User(UID)
+    db.session.add(user)
+    db.session.commit()
+    msg = 'User {} created'.format(user.name)
+    print(msg)
+    intro_t = '初めまして！レストランを代わりに決めるコンシェルと言います！\n'
+    intro_t += 'メニューからおすすめボタンを押してくれれば近くで今やってるオススメのレストランを紹介するよ！\n'
+    intro_t += '価格帯とカテゴリも設定できるよ！'
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=intro_t)
+    )
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
@@ -119,8 +141,9 @@ def inquiry():
 
 
 # add user
+"""
 @app.route('/users', methods=['POST'])
-def ceate_user():
+def create_user():
     posted = request.get_json()
     if 'name' in posted:
         name = posted['name']
@@ -134,6 +157,7 @@ def ceate_user():
         'message': msg
     }
     return jsonify(json)
+"""
 
 # place
 @app.route('/users/<int:userid>/places', methods=['GET'])
