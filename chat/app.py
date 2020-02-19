@@ -73,14 +73,13 @@ def handle_follow(event):
     # event = {"replyToken": "fe0ad3806cf84871ad4e365a31f8165f",
     # "source": {"type": "user", "userId": "U9dd63684d2d1be8262ae4ada81e84d13"}, "timestamp": 1581601008508, "type": "follow"}
     # create new user
-    name = UID
     user = User(UID)
     db.session.add(user)
     db.session.commit()
-    msg = 'User {} created'.format(user.name)
+    msg = 'User {} created'.format(user.user_id)
     print(msg)
-    intro_t = '初めまして！レストランを代わりに決めるコンシェルと言います！\n'
-    intro_t += 'メニューからおすすめボタンを押してくれれば近くで今やってるオススメのレストランを紹介するよ！\n'
+    intro_t = '初めまして！レストランを代わりに決めるコンシェルと言います' + chr(0x100001) + '\n'
+    intro_t += 'メニューからおすすめボタンを押してくれれば近くで今やってるオススメのレストランを紹介するよ' + chr(0x100033) + '\n'
     intro_t += '価格帯とカテゴリも設定できるよ！'
     line_bot_api.reply_message(
         event.reply_token,
@@ -100,7 +99,7 @@ def handle_message(event):
             line_bot_api.reply_message(
                 event.reply_token,
                 [
-                    TextSendMessage(text='近くのおすすめの店舗を紹介するから位置情報を送ってねん！'+ chr(0x10008D)),
+                    TextSendMessage(text='近くのおすすめのレストランを紹介するから位置情報を送ってね' + chr(0x10008D)),
                     TextSendMessage(text='line://nv/location'),
                 ]
             )
@@ -150,7 +149,7 @@ def create_user():
         user = User(name)
         db.session.add(user)
         db.session.commit()
-        msg = 'User {} created'.format(user.name)
+        msg = 'User {} created'.format(user.user_id)
     else:
         msg = 'No user created'
     json = {
@@ -160,26 +159,26 @@ def create_user():
 """
 
 # place
-@app.route('/users/<int:userid>/places', methods=['GET'])
+@app.route('/users/<string:userid>/places', methods=['GET'])
 def get_place(userid):
     userid = str(userid)
-    user = db.session.query(User).filter_by(id=userid).first()
+    user = db.session.query(User).filter_by(user_id=userid).first()
     json = {
         'place': user.place
     }
     return jsonify(json)
 
 
-@app.route('/users/<int:userid>/places', methods=['PUT'])
+@app.route('/users/<string:userid>/places', methods=['PUT'])
 def update_place(userid):
     userid = str(userid)
-    user = db.session.query(User).filter_by(id=userid).first()
+    user = db.session.query(User).filter_by(user_id=userid).first()
     posted = request.get_json()
     if 'place' in posted:
         user.place = posted['place']
         db.session.add(user)
         db.session.commit()
-        msg = 'User {} {} updated'.format(user.name, user.place)
+        msg = 'User {} {} updated'.format(user.user_id, user.place)
     else:
         msg = 'No user updated'
     json = {
@@ -188,26 +187,28 @@ def update_place(userid):
     return jsonify(json)
 
 # prefer
-@app.route('/users/<int:userid>/prefers', methods=['GET'])
+@app.route('/users/<string:userid>/prefers', methods=['GET'])
 def get_prefer(userid):
     userid = str(userid)
-    user = db.session.query(User).filter_by(id=userid).first()
+    print("userid", userid)
+    user = db.session.query(User).filter_by(user_id=userid).first()
+    print("user", user)
     json = {
         'prefer': user.prefer
     }
     return jsonify(json)
 
 
-@app.route('/users/<int:userid>/prefers', methods=['PUT'])
+@app.route('/users/<string:userid>/prefers', methods=['PUT'])
 def update_prefer(userid):
     userid = str(userid)
-    user = db.session.query(User).filter_by(id=userid).first()
+    user = db.session.query(User).filter_by(user_id=userid).first()
     posted = request.get_json()
     if 'prefer' in posted:
-        user.place = posted['prefer']
+        user.prefer = posted['prefer']
         db.session.add(user)
         db.session.commit()
-        msg = 'User {} {} updated'.format(user.name, user.prefer)
+        msg = 'User {} {} updated'.format(user.user_id, user.prefer)
     else:
         msg = 'No user updated'
     json = {
@@ -215,11 +216,12 @@ def update_prefer(userid):
     }
     return jsonify(json)
 
+"""
 # visit time
-@app.route('/users/<int:userid>/visit_times', methods=['GET'])
+@app.route('/users/<string:userid>/visit_times', methods=['GET'])
 def get_visit_time(userid):
     userid = str(userid)
-    user = db.session.query(User).filter_by(id=userid).first()
+    user = db.session.query(User).filter_by(user_id=userid).first()
     user_visit_time = user.visit_time
     str_visit_time = user_visit_time.strftime('%H:%M')
     json = {
@@ -228,10 +230,10 @@ def get_visit_time(userid):
     return jsonify(json)
 
 
-@app.route('/users/<int:userid>/visit_times', methods=['PUT'])
+@app.route('/users/<string:userid>/visit_times', methods=['PUT'])
 def update_visit_time(userid):
     userid = str(userid)
-    user = db.session.query(User).filter_by(id=userid).first()
+    user = db.session.query(User).filter_by(user_id=userid).first()
     posted = request.get_json()
     if 'visit_time' in posted:
         str_visit_time = posted['visit_time']
@@ -239,91 +241,36 @@ def update_visit_time(userid):
         user.visit_time = dt_visi_time
         db.session.add(user)
         db.session.commit()
-        msg = 'User {} {} updated'.format(user.name, str_visit_time)
+        msg = 'User {} {} updated'.format(user.user_id, str_visit_time)
     else:
         msg = 'No user updated'
     json = {
         'message': msg
     }
     return jsonify(json)
+"""
 
 # budget
-@app.route('/users/<int:userid>/budgets', methods=['GET'])
+@app.route('/users/<string:userid>/budgets', methods=['GET'])
 def get_budget(userid):
     userid = str(userid)
-    user = db.session.query(User).filter_by(id=userid).first()
+    user = db.session.query(User).filter_by(user_id=userid).first()
     json = {
         'budget': str(user.budget)
     }
     return jsonify(json)
 
 
-@app.route('/users/<int:userid>/budgets', methods=['PUT'])
+@app.route('/users/<string:userid>/budgets', methods=['PUT'])
 def update_budget(userid):
     userid = str(userid)
-    user = db.session.query(User).filter_by(id=userid).first()
+    user = db.session.query(User).filter_by(user_id=userid).first()
     posted = request.get_json()
     if 'budget' in posted:
         user.budget = int(posted['budget'])
         db.session.add(user)
         db.session.commit()
-        msg = 'User {} {} updated'.format(user.name, user.budget)
-    else:
-        msg = 'No user updated'
-    json = {
-        'message': msg
-    }
-    return jsonify(json)
-
-# mail
-@app.route('/users/<int:userid>/mails', methods=['GET'])
-def get_mail(userid):
-    userid = str(userid)
-    user = db.session.query(User).filter_by(id=userid).first()
-    json = {
-        'mail': user.mail
-    }
-    return jsonify(json)
-
-
-@app.route('/users/<int:userid>/mails', methods=['PUT'])
-def update_mail(userid):
-    userid = str(userid)
-    user = db.session.query(User).filter_by(id=userid).first()
-    posted = request.get_json()
-    if 'mail' in posted:
-        user.mail = posted['mail']
-        db.session.add(user)
-        db.session.commit()
-        msg = 'User {} {} updated'.format(user.name, user.mail)
-    else:
-        msg = 'No user updated'
-    json = {
-        'message': msg
-    }
-    return jsonify(json)
-
-# inquiry
-@app.route('/users/<int:userid>/inquirys', methods=['GET'])
-def get_inquiry(userid):
-    userid = str(userid)
-    user = db.session.query(User).filter_by(id=userid).first()
-    json = {
-        'inquiry': user.inquiry
-    }
-    return jsonify(json)
-
-
-@app.route('/users/<int:userid>/inquirys', methods=['PUT'])
-def update_inquiry(userid):
-    userid = str(userid)
-    user = db.session.query(User).filter_by(id=userid).first()
-    posted = request.get_json()
-    if 'inquiry' in posted:
-        user.inquiry = posted['inquiry']
-        db.session.add(user)
-        db.session.commit()
-        msg = 'User {} {} updated'.format(user.name, user.inquiry)
+        msg = 'User {} {} updated'.format(user.user_id, user.budget)
     else:
         msg = 'No user updated'
     json = {

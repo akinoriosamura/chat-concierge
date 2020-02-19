@@ -35,7 +35,7 @@ cd chat
 flask db init
 flask db migrate
 flask db upgrade
-Ctrl + c
+Ctrl + p + q
 ```
 
 ### ngrok
