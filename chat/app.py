@@ -1,5 +1,6 @@
 import os
 import datetime
+import json
 
 from chat import dialogue_manager
 import chat.models
@@ -15,7 +16,7 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    FollowEvent, MessageEvent, TextMessage, TextSendMessage, LocationMessage
+    FlexSendMessage, FollowEvent, MessageEvent, TextMessage, TextSendMessage, LocationMessage
 )
 
 
@@ -42,9 +43,6 @@ YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
 
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
-
-# initialize
-manager = dialogue_manager.DialogueManager(30, 150)
 
 
 @app.route("/callback", methods=['POST'])
@@ -94,6 +92,7 @@ def handle_message(event):
         TextSendMessage(text=event.message.text))
     """
     print(event)
+    print("reply token: ", event.reply_token)
     if event.type == "message":
         if (event.message.text == "おすすめ"):
             line_bot_api.reply_message(
@@ -114,20 +113,51 @@ def handle_message(event):
 
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_location(event):
+    print("reply token: ", event.reply_token)
     lat = event.message.latitude
     lon = event.message.longitude
     print("位置情報", event.message)
 
+    # manager取得
+    # manager = dialogue_manager.DialogueManager(35.66, 139.7)
+    manager = dialogue_manager.DialogueManager(lat, lon)
     # レコメンド内容取得
+    result = manager.gen_recommend_utterance()
 
-    # lineにメッセージ送信
+    # lineにメッセージ送信 by txt
     line_bot_api.reply_message(
         event.reply_token,
         [
-            TextSendMessage(text='おすすめ店舗は＊＊です。'),
-            TextSendMessage(text='またいつでも聞いてください！'),
+            TextSendMessage(text=result)
         ]
     )
+
+    # lineにメッセージ送信 by fixed
+    # import pdb;pdb.set_trace()
+    # with open('chat/fixed_tmpl_.json') as f:
+    #     f_tmpl = json.load(f)
+    """
+    f_tmpl = {
+        "type": "bubble",
+        "body": {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+            {
+                "type": "text",
+                "text": "Hello,"
+            },
+            {
+                "type": "text",
+                "text": "World!"
+            }
+            ]
+        }
+    }
+    container_obj = FlexSendMessage.new_from_json_dict(f_tmpl)
+    UID = event.source.user_id
+    line_bot_api.push_message(UID, messages=container_obj)
+    """
 
 @app.route("/")
 def settings():

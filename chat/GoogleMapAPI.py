@@ -165,7 +165,8 @@ class GoogleDetailAPI():
         self.key = os.environ["GoogleMapAPIKEY"]  # 上記で作成したAPIキーを入れる
         self.client = googlemaps.Client(self.key)  # インスタンス生成
         self.params = {
-            'place_id': None
+            'place_id': None,
+            'language': 'ja'
         }
 
     def extract_responses(self, place_id):

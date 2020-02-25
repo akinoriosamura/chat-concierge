@@ -55,6 +55,7 @@ class RestaurantSelector(object):
             print("num of restaurants: ", len(restaurants))
             # top of order for googlemapapi pronunce order
             selected_result = restaurants[0]
+            print("selected result: ", selected_result)
         else:
             selected_result = random.choice(restaurants)
 
