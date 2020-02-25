@@ -1,22 +1,9 @@
 # chat-concierge
 
-## api ref
- - callback & LIFF  
-(line official account manager)[https://manager.line.biz/]  
- - LIFF app link
- https://developers.line.biz/console/channel/1626501382
- - rich menu  
-(line developer)[https://developers.line.biz/console/channel/1626501382/basic/]  
- - inquiry
-https://docs.google.com/forms/d/1mQqv4M-cW4jXUc0JOQvZ-2saVRPczxSD57-CR4NyN-4/edit
-
-## connect to line api
- - change Endpoint URL in line dev for LIFF  
- https://developers.line.biz/console/channel/1626501382/liff/1626501382-xMvalEMJ  
- - change Webhook URL  in line dev for message API  
- https://developers.line.biz/console/channel/1626501382/messaging-api
- - run rich menu  
- https://manager.line.biz/account/@968puzvz/richmenu/2092848
+## setup
+ - clone
+ - set `.env` in `chat-concierge/`
+ - set `build` of react-setting in `chat-concierge/`
 
 ## develop run
 ### build
@@ -67,6 +54,25 @@ cd chat
 pipenv run test
 Ctrl + c
 ```
+
+## api ref
+ - callback & LIFF  
+(line official account manager)[https://manager.line.biz/]  
+ - LIFF app link
+ https://developers.line.biz/console/channel/1626501382
+ - rich menu  
+(line developer)[https://developers.line.biz/console/channel/1626501382/basic/]  
+ - inquiry
+https://docs.google.com/forms/d/1mQqv4M-cW4jXUc0JOQvZ-2saVRPczxSD57-CR4NyN-4/edit
+
+## connect to line api
+ - change Endpoint URL in line dev for LIFF  
+ https://developers.line.biz/console/channel/1626501382/liff/1626501382-xMvalEMJ  
+ - change Webhook URL  in line dev for message API  
+ https://developers.line.biz/console/channel/1626501382/messaging-api
+ - run rich menu  
+ https://manager.line.biz/account/@968puzvz/richmenu/2092848
+
 ## until release production server
  - flask, gunicorn(wsgi), nginx(web server), docker
 https://testdriven.io/courses/tdd-flask/deployment/
