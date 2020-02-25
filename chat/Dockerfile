@@ -10,3 +10,5 @@ WORKDIR /app
 RUN pip install -U pip && \
     pip install pipenv && \
     pipenv install --dev --system
+
+CMD ["uwsgi","--ini","/app/uwsgi.ini"]
