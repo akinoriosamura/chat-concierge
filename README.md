@@ -3,6 +3,12 @@
 ## setup
  - clone
  - set `.env` in `chat-concierge/`
+ ``` 
+ .env has
+ GooglePlaceAPI
+ YOUR_CHANNEL_ACCESS_TOKEN
+ YOUR_CHANNEL_SECRET
+ ```
  - set `build` of react-setting in `chat-concierge/`
 
 ## develop run
@@ -13,7 +19,7 @@ docker-compose up -d
 ```
 
 ### check link
- - please check url and api key
+ - please check url and api key of .env  
 
 ### db create if not
 ```
@@ -31,6 +37,9 @@ Ctrl + p + q
  ```
  ngrok htttp 4000
  ```
+
+### set ngrok link to messaging api and LIFF
+ https://developers.line.biz/console/channel/1626501382
 
 ### in line
  - open AI コンシェルジュ
