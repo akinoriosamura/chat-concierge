@@ -2,10 +2,10 @@ import os
 import datetime
 import json
 
-from chat import dialogue_manager
-import chat.models
-from chat.models.user import User
-from chat.database import init_db, db
+from recommender import dialogue_manager
+import server.models
+from server.models.user import User
+from server.database import init_db, db
 
 from flask import Flask, abort, request, jsonify, render_template
 
@@ -26,9 +26,9 @@ def create_app(test=False):
         __name__, static_folder="../build/static", template_folder="../build"
     )
     if test:
-        app.config.from_object('chat.config.TestingConfig')
+        app.config.from_object('server.config.TestingConfig')
     else:
-        app.config.from_object('chat.config.Config')
+        app.config.from_object('server.config.Config')
     init_db(app)
 
     return app
@@ -134,7 +134,7 @@ def handle_location(event):
 
     # lineにメッセージ送信 by fixed
     # import pdb;pdb.set_trace()
-    # with open('chat/fixed_tmpl_.json') as f:
+    # with open('server/fixed_tmpl_.json') as f:
     #     f_tmpl = json.load(f)
     """
     f_tmpl = {

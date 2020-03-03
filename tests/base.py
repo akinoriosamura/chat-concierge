@@ -1,13 +1,13 @@
 from flask_testing import TestCase
 
-from chat.app import app
+from server.app import app
 
-from chat.database import db
+from server.database import db
 
 
 class BaseTestCase(TestCase):
     def create_app(self):
-        app.config.from_object('chat.config.TestingConfig')
+        app.config.from_object('server.config.TestingConfig')
         return app
 
     def setUp(self):

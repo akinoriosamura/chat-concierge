@@ -1,14 +1,19 @@
-FROM python:3.7
+FROM python:3.6
 
 RUN apt-get update
 
-COPY . /app
+# workdirの指定
+WORKDIR /var/www
 
-WORKDIR /app
+# 依存Pythonライブラリ一覧コピー
+COPY Pipfile ./
+COPY Pipfile.lock ./
 
 # install pipenv
 RUN pip install -U pip && \
     pip install pipenv && \
     pipenv install --dev --system
 
-CMD ["uwsgi","--ini","/app/uwsgi.ini"]
+WORKDIR /var/www/src
+
+CMD ["uwsgi","--ini","/var/www/uwsgi.ini"]

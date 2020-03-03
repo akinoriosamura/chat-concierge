@@ -1,4 +1,4 @@
-from chat import selector
+from recommender import selector
 
 import pytest
 

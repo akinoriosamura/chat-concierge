@@ -1,4 +1,4 @@
-from chat import GoogleMapAPI
+from recommender import GoogleMapAPI
 
 import pytest
 

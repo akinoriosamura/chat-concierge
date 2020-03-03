@@ -16,32 +16,32 @@ services:
       - TZ=Asis/Tokyo
 
   # API esrver
-  chat-api:
-    container_name: chat-api
+  uwsgi:
+    container_name: uwsgi
     volumes:
-      - ./:/app
+      - ./chat:/var/www/
+    ports:
+      - 3031:3031
+    build:
+      context: ./chat
     env_file:
       - ./.env
     environment:
-      FLASK_APP: /app/chat/run.py 
+      TZ: "Asia/Tokyo"
+      FLASK_APP: /var/www/src/server/run.py 
       ENV: GoogleMapAPIKEY
       ENV: YOUR_CHANNEL_ACCESS_TOKEN
       ENV: YOUR_CHANNEL_SECRET
     stdin_open: true
     tty: true
-    ports:
-      - 4000:4000
-    build:
-      context: ./
-      dockerfile: ./chat/Dockerfile
-    # command: flask run -h 0.0.0.0 -p 4000
+    # command: flask run -h 0.0.0.0 -p 3031
 
   nginx:
     build: ./nginx
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     links:
-      - chat-api
+      - uwsgi
     ports:
       - "4231:80"
     environment:

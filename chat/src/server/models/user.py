@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from chat.database import db
+from server.database import db
 
 
 class User(db.Model):

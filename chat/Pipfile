@@ -34,4 +34,4 @@ python_version = "3.7"
 [scripts]
 test = "pytest -v --flake8 --cov=."
 api_test = "pytest -v --flake8 --cov=. ./tests/test_app.py"
-run_server = "flask run --port=4000"
+run_server = "flask run --port=3031"

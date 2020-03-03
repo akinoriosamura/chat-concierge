@@ -1,4 +1,4 @@
-from chat import dialogue_manager
+from recommender import dialogue_manager
 
 import pytest
 

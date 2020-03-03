@@ -1,5 +1,5 @@
-from chat import selector
-from chat import GoogleMapAPI
+from recommender import selector
+from recommender import GoogleMapAPI
 
 
 class DialogueManager(object):

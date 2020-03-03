@@ -35,7 +35,7 @@ Ctrl + p + q
  - install ngrok
  - run ngrok
  ```
- ngrok htttp 4000
+ ngrok htttp 3031
  ```
 
 ### set ngrok link to messaging api and LIFF
