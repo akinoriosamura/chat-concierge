@@ -1,8 +1,8 @@
 version: '3.7'
 services:
   # db server
-  chat-mysql:
-    container_name: chat-mysql
+  chat-mysql-dev:
+    container_name: chat-mysql-dev
     build: ./mysql/
     volumes:
       - ./mysql/data:/var/lib/mysql # データの永続化
@@ -16,14 +16,15 @@ services:
       - TZ=Asis/Tokyo
 
   # API esrver
-  uwsgi:
-    container_name: uwsgi
+  chat-api-dev:
+    container_name: chat-api-dev
     volumes:
       - ./chat:/var/www/
     ports:
-      - 3031:3031
+      - 4000:4000
     build:
       context: ./chat
+      dockerfile: Dockerfile.dev
     env_file:
       - ./.env
     environment:
@@ -34,15 +35,4 @@ services:
       ENV: YOUR_CHANNEL_SECRET
     stdin_open: true
     tty: true
-    # command: flask run -h 0.0.0.0 -p 3031
-
-  nginx:
-    build: ./nginx
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-    links:
-      - uwsgi
-    ports:
-      - "4231:80"
-    environment:
-      TZ: "Asia/Tokyo"
+    # command: flask run -h 0.0.0.0 -p 4000

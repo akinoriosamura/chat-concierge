@@ -1,0 +1,50 @@
+version: '3.7'
+services:
+  # db server
+  chat-mysql-prod:
+    container_name: chat-mysql-prod
+    build: ./mysql/
+    volumes:
+      - ./mysql/data:/var/lib/mysql # データの永続化
+      - ./mysql/sqls:/docker-entrypoint-initdb.d # 初期化時に実行するSQL
+    environment:
+      - MYSQL_ROOT_PASSWORD=Mitsuya90
+      - DB_PASSWORD=Mitsuya90
+      - DB_DATABASE=chat
+      - DB_TEST_PASSWORD=Mitsuya90
+      - DB_TEST_DATABASE=test_chat
+      - TZ=Asis/Tokyo
+
+  # API esrver
+  chat-api-prod:
+    container_name: chat-api-prod
+    volumes:
+      - ./chat:/var/www/
+    ports:
+      - 3031:3031
+    build:
+      context: ./chat
+      dockerfile: Dockerfile.prod
+    env_file:
+      - ./.env
+    environment:
+      TZ: "Asia/Tokyo"
+      FLASK_APP: /var/www/src/server/run.py 
+      ENV: GoogleMapAPIKEY
+      ENV: YOUR_CHANNEL_ACCESS_TOKEN
+      ENV: YOUR_CHANNEL_SECRET
+    stdin_open: true
+    tty: true
+    # command: flask run -h 0.0.0.0 -p 3031
+
+  nginx-prod:
+    container_name: chat-nginx-prod
+    build: ./nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    links:
+      - chat-api-prod
+    ports:
+      - "4231:80"
+    environment:
+      TZ: "Asia/Tokyo"

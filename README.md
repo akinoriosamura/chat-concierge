@@ -11,7 +11,7 @@
  ```
  - set `build` of react-setting in `chat-concierge/`
 
-## develop run
+## Develop run
 ### build
 ```
 docker-compose up -d
@@ -45,6 +45,36 @@ Ctrl + p + q
  - open AI コンシェルジュ
  - tap rich menu
 
+## Production run
+### build
+```
+docker-compose up -d
+ - flask run も走る
+```
+
+### check link
+ - please check url and api key of .env  
+
+### db create if not
+```
+docker exec -it chat-api /bin/bash
+cd chat
+flask db init
+flask db migrate
+flask db upgrade
+Ctrl + p + q
+```
+
+### set server public link to messaging api and LIFF
+ https://developers.line.biz/console/channel/1626501382
+
+### in line
+ - open AI コンシェルジュ
+ - tap rich menu
+
+
+## Other
+
 ### api shell
 ```
 docker attach  chat-api
@@ -64,7 +94,7 @@ pipenv run test
 Ctrl + c
 ```
 
-## api ref
+### api ref
  - callback & LIFF  
 (line official account manager)[https://manager.line.biz/]  
  - LIFF app link
@@ -74,7 +104,7 @@ Ctrl + c
  - inquiry
 https://docs.google.com/forms/d/1mQqv4M-cW4jXUc0JOQvZ-2saVRPczxSD57-CR4NyN-4/edit
 
-## connect to line api
+### connect to line api
  - change Endpoint URL in line dev for LIFF  
  https://developers.line.biz/console/channel/1626501382/liff/1626501382-xMvalEMJ  
  - change Webhook URL  in line dev for message API  
@@ -82,7 +112,7 @@ https://docs.google.com/forms/d/1mQqv4M-cW4jXUc0JOQvZ-2saVRPczxSD57-CR4NyN-4/edi
  - run rich menu  
  https://manager.line.biz/account/@968puzvz/richmenu/2092848
 
-## until release production server
+### until release production server
  - flask, gunicorn(wsgi), nginx(web server), docker
 https://testdriven.io/courses/tdd-flask/deployment/
 https://qiita.com/arata-honda/items/e22c9df83df8ee0e9c4c
