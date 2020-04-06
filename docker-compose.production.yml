@@ -19,25 +19,25 @@ services:
   chat-api-prod:
     container_name: chat-api-prod
     volumes:
-      - ./chat:/var/www/
+      - ./app:/app/
     ports:
       - 3031:3031
     build:
-      context: ./chat
+      context: ./app
       dockerfile: Dockerfile.prod
     env_file:
       - ./.env
     environment:
       TZ: "Asia/Tokyo"
-      FLASK_APP: /var/www/src/server/run.py 
       ENV: GoogleMapAPIKEY
       ENV: YOUR_CHANNEL_ACCESS_TOKEN
       ENV: YOUR_CHANNEL_SECRET
+    links:
+      - chat-mysql-prod
     stdin_open: true
     tty: true
-    # command: flask run -h 0.0.0.0 -p 3031
 
-  nginx-prod:
+  chat-nginx-prod:
     container_name: chat-nginx-prod
     build: ./nginx
     volumes:
@@ -45,6 +45,23 @@ services:
     links:
       - chat-api-prod
     ports:
-      - "4231:80"
+      - "4231:4231"
     environment:
       TZ: "Asia/Tokyo"
+    stdin_open: true
+    tty: true
+
+  chat-ssl-prod:
+    container_name: chat-ssl-prod
+    image: steveltn/https-portal:1
+    ports:
+      - '80:80'
+      - '443:443'
+    links:
+      - chat-nginx-prod
+    restart: always
+    environment:
+      DOMAINS: 'www.restaurant-concierge.net -> http://chat-nginx-prod:4231'
+      # DOMAINS: 'www.restaurant-concierge.net'
+      STAGE: 'production' # Don't use production until staging works
+      # FORCE_RENEW: 'true'

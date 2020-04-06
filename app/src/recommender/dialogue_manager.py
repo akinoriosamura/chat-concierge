@@ -1,5 +1,5 @@
-from recommender import selector
-from recommender import GoogleMapAPI
+from src.recommender import selector
+from src.recommender import GoogleMapAPI
 
 
 class DialogueManager(object):

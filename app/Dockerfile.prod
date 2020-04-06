@@ -1,9 +1,17 @@
+# FROM tiangolo/uwsgi-nginx-flask:python3.6
 FROM python:3.6
+# FROM tiangolo/uwsgi-nginx:python3.6
+
+ENV LISTEN_PORT 3031
+
+EXPOSE 3031
+
+# COPY ./app /app
 
 RUN apt-get update
 
 # workdirの指定
-WORKDIR /var/www
+WORKDIR /app
 
 # 依存Pythonライブラリ一覧コピー
 COPY Pipfile ./
@@ -14,6 +22,6 @@ RUN pip install -U pip && \
     pip install pipenv && \
     pipenv install --dev --system
 
-WORKDIR /var/www/src
+# WORKDIR /app/src
 
-CMD ["uwsgi","--ini","/var/www/uwsgi.ini"]
+CMD ["uwsgi","--ini","/app/uwsgi.ini"]

@@ -6,15 +6,16 @@
  ``` 
  .env has
  GooglePlaceAPI
+ # LineMessaginAPI
  YOUR_CHANNEL_ACCESS_TOKEN
  YOUR_CHANNEL_SECRET
  ```
  - set `build` of react-setting in `chat-concierge/`
 
-## Develop run
+## Development
 ### build
 ```
-docker-compose up -d
+sh scripts/update_development.sh
  - flask run も走る
 ```
 
@@ -23,8 +24,8 @@ docker-compose up -d
 
 ### db create if not
 ```
-docker exec -it chat-api /bin/bash
-cd chat
+docker exec -it chat-api-dev /bin/bash
+cd app
 flask db init
 flask db migrate
 flask db upgrade
@@ -46,10 +47,26 @@ Ctrl + p + q
  - tap rich menu
 
 ## Production run
+### setup
+ - set `.env` in `chat-concierge/`
+ ``` 
+ .env has
+ GooglePlaceAPI
+ # LineMessaginAPI
+ YOUR_CHANNEL_ACCESS_TOKEN
+ YOUR_CHANNEL_SECRET
+ ```
+ - set `credentials` has credentials in `nginx/.aws/`
+ ```credentials
+ [default]
+ aws_access_key_id=XXXXXX
+ aws_secret_access_key=XXXX/XXXXX
+ ```
+ - set `build` of react-setting in `chat-concierge/`
+
 ### build
 ```
-docker-compose up -d
- - flask run も走る
+sh scripts/update_production.sh
 ```
 
 ### check link
@@ -57,8 +74,8 @@ docker-compose up -d
 
 ### db create if not
 ```
-docker exec -it chat-api /bin/bash
-cd chat
+docker exec -it chat-api-prod /bin/bash
+cd app
 flask db init
 flask db migrate
 flask db upgrade
@@ -89,7 +106,7 @@ docker-compose exec chat-mysql mysql -u root -p
 ### test
 ```
 docker exec -it chat-api /bin/bash
-cd chat
+cd app
 pipenv run test
 Ctrl + c
 ```
@@ -111,12 +128,4 @@ https://docs.google.com/forms/d/1mQqv4M-cW4jXUc0JOQvZ-2saVRPczxSD57-CR4NyN-4/edi
  https://developers.line.biz/console/channel/1626501382/messaging-api
  - run rich menu  
  https://manager.line.biz/account/@968puzvz/richmenu/2092848
-
-### until release production server
- - flask, gunicorn(wsgi), nginx(web server), docker
-https://testdriven.io/courses/tdd-flask/deployment/
-https://qiita.com/arata-honda/items/e22c9df83df8ee0e9c4c
-http://docs.docker.jp/compose/production.html
-https://www.slideshare.net/zaruhiroyukisakuraba/railsdocker-78973487
-https://github.com/CircleCI-Public/circleci-demo-docker/blob/master/.circleci/config.yml
 

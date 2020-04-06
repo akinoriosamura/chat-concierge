@@ -4,11 +4,11 @@ RUN apt-get update
 
 
 # workdirの指定
-WORKDIR /var/www
+WORKDIR /app
 
 # 依存Pythonライブラリ一覧コピー
-COPY Pipfile /var/www
-COPY Pipfile.lock /var/www
+COPY Pipfile /app
+COPY Pipfile.lock /app
 
 # install pipenv
 RUN pip install -U pip && \
@@ -16,4 +16,7 @@ RUN pip install -U pip && \
     pipenv install --dev --system
 
 # workdirの指定
-WORKDIR /var/www/src
+WORKDIR /app/src
+
+# command: flask run -h 0.0.0.0 -p 4000
+CMD ["flask","run","-h", "0.0.0.0", "-p", "4000"]

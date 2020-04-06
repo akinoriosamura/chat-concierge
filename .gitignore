@@ -93,6 +93,8 @@ celerybeat-schedule
 *.sage.py
 
 # Environments
+.aws
+credentials
 .env
 .venv
 env/
@@ -124,3 +126,10 @@ mysql/data
 
 # vscode
 .vscode/
+
+# config
+letsencrypt/*
+letsencrypt/config/*
+letsencrypt/config/csr/
+letsencrypt/config/csr/0000_csr-certbot.pem
+!.gitkeep

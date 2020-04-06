@@ -2,10 +2,10 @@ import os
 import datetime
 import json
 
-from recommender import dialogue_manager
-import server.models
-from server.models.user import User
-from server.database import init_db, db
+from src.recommender import dialogue_manager
+import src.server.models
+from src.server.models.user import User
+from src.server.database import init_db, db
 
 from flask import Flask, abort, request, jsonify, render_template
 
@@ -26,9 +26,9 @@ def create_app(test=False):
         __name__, static_folder="../build/static", template_folder="../build"
     )
     if test:
-        app.config.from_object('server.config.TestingConfig')
+        app.config.from_object('src.server.config.TestingConfig')
     else:
-        app.config.from_object('server.config.Config')
+        app.config.from_object('src.server.config.Config')
     init_db(app)
 
     return app
@@ -161,6 +161,7 @@ def handle_location(event):
 
 @app.route("/")
 def settings():
+    #import pdb;pdb.set_trace()
     return render_template("index.html")
 
 

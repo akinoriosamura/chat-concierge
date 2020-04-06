@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from server.database import db
+from src.server.database import db
 
 
 class User(db.Model):

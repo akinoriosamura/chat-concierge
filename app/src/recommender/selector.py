@@ -1,6 +1,6 @@
 import random
 
-from recommender import GoogleMapAPI
+from src.recommender import GoogleMapAPI
 
 
 class RestaurantSelector(object):
