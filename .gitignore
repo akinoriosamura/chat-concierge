@@ -1,7 +1,7 @@
 .DS_Store
 settings.py
 
-migrations
+# migrations
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

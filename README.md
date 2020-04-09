@@ -25,7 +25,7 @@ sh scripts/update_development.sh
 ### db create if not
 ```
 docker exec -it chat-api-dev /bin/bash
-cd app
+cd server
 flask db init
 flask db migrate
 flask db upgrade
@@ -56,12 +56,6 @@ Ctrl + p + q
  YOUR_CHANNEL_ACCESS_TOKEN
  YOUR_CHANNEL_SECRET
  ```
- - set `credentials` has credentials in `nginx/.aws/`
- ```credentials
- [default]
- aws_access_key_id=XXXXXX
- aws_secret_access_key=XXXX/XXXXX
- ```
  - set `build` of react-setting in `chat-concierge/`
 
 ### build
@@ -72,12 +66,10 @@ sh scripts/update_production.sh
 ### check link
  - please check url and api key of .env  
 
-### db create if not
+### db upgrade from dev migration
 ```
 docker exec -it chat-api-prod /bin/bash
-cd app
-flask db init
-flask db migrate
+cd server
 flask db upgrade
 Ctrl + p + q
 ```
@@ -100,8 +92,7 @@ docker attach  chat-api
 ### attach mysql
 pass: in `docker-compose.yml`
 ```
-docker-compose exec chat-mysql mysql -u root -p
-```
+docker-compose -f docker-compose.development.yml exec chat-mysql-dev mysql -u root -p```
 
 ### test
 ```

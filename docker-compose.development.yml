@@ -3,14 +3,18 @@ services:
   # db server
   chat-mysql-dev:
     container_name: chat-mysql-dev
-    build: ./mysql/
+    ports:
+      - 4306:3306
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile.dev
     volumes:
       - ./mysql/data:/var/lib/mysql # データの永続化
-      - ./mysql/sqls:/docker-entrypoint-initdb.d # 初期化時に実行するSQL
+      - ./mysql/sqls-dev:/docker-entrypoint-initdb.d # 初期化時に実行するSQL
     environment:
       - MYSQL_ROOT_PASSWORD=Mitsuya90
       - DB_PASSWORD=Mitsuya90
-      - DB_DATABASE=chat
+      - DB_DATABASE=dev
       - DB_TEST_PASSWORD=Mitsuya90
       - DB_TEST_DATABASE=test_chat
       - TZ=Asis/Tokyo
@@ -30,6 +34,7 @@ services:
       ENV: GoogleMapAPIKEY
       ENV: YOUR_CHANNEL_ACCESS_TOKEN
       ENV: YOUR_CHANNEL_SECRET
+      ENV: development
     stdin_open: true
     tty: true
     # command: flask run -h 0.0.0.0 -p 4000

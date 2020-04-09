@@ -3,17 +3,16 @@ services:
   # db server
   chat-mysql-prod:
     container_name: chat-mysql-prod
-    build: ./mysql/
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile.prod
     volumes:
       - ./mysql/data:/var/lib/mysql # データの永続化
-      - ./mysql/sqls:/docker-entrypoint-initdb.d # 初期化時に実行するSQL
+      - ./mysql/sqls-prod:/docker-entrypoint-initdb.d # 初期化時に実行するSQL
     environment:
-      - MYSQL_ROOT_PASSWORD=Mitsuya90
-      - DB_PASSWORD=Mitsuya90
-      - DB_DATABASE=chat
-      - DB_TEST_PASSWORD=Mitsuya90
-      - DB_TEST_DATABASE=test_chat
-      - TZ=Asis/Tokyo
+      ENV: DB_PASSWORD=Mitsuya90
+      ENV: DB_DATABASE=prod
+      ENV: TZ=Asis/Tokyo
 
   # API esrver
   chat-api-prod:
@@ -32,6 +31,7 @@ services:
       ENV: GoogleMapAPIKEY
       ENV: YOUR_CHANNEL_ACCESS_TOKEN
       ENV: YOUR_CHANNEL_SECRET
+      ENV: production
     links:
       - chat-mysql-prod
     stdin_open: true
