@@ -55,6 +55,9 @@ Ctrl + p + q
  # LineMessaginAPI
  YOUR_CHANNEL_ACCESS_TOKEN
  YOUR_CHANNEL_SECRET
+ MYSQL_ROOT_PASSWORD
+ DB_PASSWORD
+ DB_PROD_DATABASE
  ```
  - set `build` of react-setting in `chat-concierge/`
 
