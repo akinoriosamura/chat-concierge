@@ -8,12 +8,15 @@ services:
       dockerfile: Dockerfile.prod
     volumes:
       - ./mysql/data:/var/lib/mysql # データの永続化
-      - ./mysql/sqls-prod:/docker-entrypoint-initdb.d # 初期化時に実行するSQL
+      - ./mysql/sqls:/docker-entrypoint-initdb.d # 初期化時に実行するSQL
+    env_file:
+      - ./.env
     environment:
-      ENV: DB_PASSWORD=Mitsuya90
-      ENV: DB_DATABASE=prod
-      ENV: TZ=Asis/Tokyo
-
+      TZ: Asis/Tokyo
+      ENV: MYSQL_ROOT_PASSWORD
+      ENV: DB_PASSWORD
+      ENV: DB_DATABASE
+  
   # API esrver
   chat-api-prod:
     container_name: chat-api-prod

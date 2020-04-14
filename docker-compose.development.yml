@@ -10,14 +10,16 @@ services:
       dockerfile: Dockerfile.dev
     volumes:
       - ./mysql/data:/var/lib/mysql # データの永続化
-      - ./mysql/sqls-dev:/docker-entrypoint-initdb.d # 初期化時に実行するSQL
+      - ./mysql/sqls:/docker-entrypoint-initdb.d # 初期化時に実行するSQL
+    env_file:
+      - ./.env
     environment:
-      - MYSQL_ROOT_PASSWORD=Mitsuya90
-      - DB_PASSWORD=Mitsuya90
-      - DB_DATABASE=dev
-      - DB_TEST_PASSWORD=Mitsuya90
-      - DB_TEST_DATABASE=test_chat
-      - TZ=Asis/Tokyo
+      TZ: Asis/Tokyo
+      ENV: MYSQL_ROOT_PASSWORD
+      ENV: DB_PASSWORD
+      ENV: DB_DATABASE
+      ENV: DB_TEST_PASSWORD
+      ENV: DB_TEST_DATABASE
 
   # API esrver
   chat-api-dev:

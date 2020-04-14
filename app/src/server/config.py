@@ -47,7 +47,6 @@ class TestingConfig:
     SQLALCHEMY_ECHO = False
 
 # Config = DevelopmentConfig
-import pdb;pdb.set_trace()
 if os.getenv('ENV') == 'production':
     Config = ProductionConfig
 elif os.getenv('ENV') == 'development':
