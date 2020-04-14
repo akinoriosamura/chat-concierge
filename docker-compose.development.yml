@@ -17,7 +17,7 @@ services:
       TZ: Asis/Tokyo
       ENV: MYSQL_ROOT_PASSWORD
       ENV: DB_PASSWORD
-      ENV: DB_DATABASE
+      ENV: DB_DEV_DATABASE
       ENV: DB_TEST_PASSWORD
       ENV: DB_TEST_DATABASE
 

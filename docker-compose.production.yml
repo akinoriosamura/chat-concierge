@@ -15,7 +15,7 @@ services:
       TZ: Asis/Tokyo
       ENV: MYSQL_ROOT_PASSWORD
       ENV: DB_PASSWORD
-      ENV: DB_DATABASE
+      ENV: DB_PROD_DATABASE
   
   # API esrver
   chat-api-prod:

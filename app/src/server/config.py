@@ -12,7 +12,7 @@ class ProductionConfig:
         'user': os.getenv('DB_USER', 'root'),
         'password': os.getenv('DB_PASSWORD', 'Mitsuya90'),
         'host': os.getenv('DB_HOST', 'chat-mysql-prod'),
-        'database': os.getenv('DB_DATABASE', 'prod'),
+        'database': os.getenv('DB_PROD_DATABASE', 'prod'),
     })
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False
@@ -28,7 +28,7 @@ class DevelopmentConfig:
         'user': os.getenv('DB_USER', 'root'),
         'password': os.getenv('DB_PASSWORD', 'Mitsuya90'),
         'host': os.getenv('DB_HOST', 'chat-mysql-dev'),
-        'database': os.getenv('DB_DATABASE', 'dev'),
+        'database': os.getenv('DB_DEV_DATABASE', 'dev'),
     })
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = False
@@ -47,6 +47,7 @@ class TestingConfig:
     SQLALCHEMY_ECHO = False
 
 # Config = DevelopmentConfig
+print("db config: ", os.getenv('ENV'))
 if os.getenv('ENV') == 'production':
     Config = ProductionConfig
 elif os.getenv('ENV') == 'development':

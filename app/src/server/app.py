@@ -73,6 +73,8 @@ def handle_follow(event):
     # create new user
     user = User(UID)
     db.session.add(user)
+    print("dbdbdb: ", db)
+    print("user: ", user)
     db.session.commit()
     msg = 'User {} created'.format(user.user_id)
     print(msg)
